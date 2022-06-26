@@ -1,6 +1,5 @@
 import { appService } from './services/app.service.js'
 import { router } from './router/index.js'
-import appPortal from './cmps/poratlCmp.js'
 import namesList from './cmps/names-list.js'
 import appHeader from './cmps/app-header.js'
 import appModal from './cmps/app-modal.js'
@@ -9,35 +8,33 @@ import activities from './cmps/activities.js'
 
 const options = {
   template: `
-        
+        <!-- user msg cmp -->
         <user-msg v-if="userMsg"
         @reset-msg="setUserMsg"
         >{{userMsg}}</user-msg>
-
+        <!-- app header -->
         <app-header @open-modal="ToggleModal"
         @open-activities="toggleActivities"
         ></app-header>
-        <!-- <app-portal></app-portal> -->
+        <!-- items-list -->
         <names-List v-if="items"
           :names="items"
           @remove="onRemoveItem"
-          ></names-List>
-
+        ></names-List>
+        <!-- modal -->
         <app-modal v-if="isModalOpen" 
         :isModalOpen="isModalOpen"
         @toggle-modal="ToggleModal($event)"
         ></app-modal>
         <!-- nested route about page -->
-        <router-view></router-view>
-        
-          <activities :activities="activities" v-if="isTeleportOpen"></activities>
-
+        <router-view @update="updateItem"></router-view>
+        <!--teleport cmp-->
+        <activities :activities="activities" 
+        v-if="isTeleportOpen"></activities>
  `,
 
   created() {
-    console.log('created')
     this.loadItems()
-    console.log()
   },
 
   data() {
@@ -54,6 +51,7 @@ const options = {
     items: {
       handler(newval, oldval) {
         if (newval.length < oldval.length) {
+          console.log(this.items)
           const desc = `item removed from list`
           this.onNewActivity(desc)
         }
@@ -66,7 +64,6 @@ const options = {
         this.onNewActivity(desc)
       }
       if (path === '/') this.setCurrIte(null)
-      console.log(this.currItem)
     },
   },
   methods: {
@@ -84,7 +81,7 @@ const options = {
     onAddItem(item) {
       const addedItem = appService.save(item)
       this.setUserMsg('New item added')
-      this.items = [...this.items, addedItem]
+      this.items = [...this.items]
       const desc = `item added to list`
       this.onNewActivity(desc)
       // this.loadItems()
@@ -106,6 +103,36 @@ const options = {
     toggleActivities() {
       this.isTeleportOpen = !this.isTeleportOpen
     },
+    updateItem(type, value) {
+      switch (type) {
+        case 'title':
+          this.setItemName(value)
+          break
+        case 'cellNum':
+          this.setItemCellNum(value)
+          break
+        case 'email':
+          this.setItemEmail(value)
+          break
+
+        default:
+          break
+      }
+    },
+    setItemName(value) {
+      this.currItem.name = value
+      appService.save(this.currItem)
+    },
+    setItemCellNum(value) {
+      this.currItem.cellNum = value
+      console.log(this.currItem)
+      appService.save(this.currItem)
+    },
+    setItemEmail(value) {
+      this.currItem.email = value
+      console.log(this.currItem)
+      appService.save(this.currItem)
+    },
   },
   updated() {
     appService.logActivities(this.activities)
@@ -114,7 +141,6 @@ const options = {
     // appService.logActivities(this.activities)
   },
   components: {
-    appPortal,
     namesList,
     appModal,
     userMsg,
@@ -123,7 +149,7 @@ const options = {
 }
 
 const app = Vue.createApp(options)
-app.component('app-portal', appPortal)
+
 app.component('app-header', appHeader)
 app.component('app-modal', appModal)
 app.component('names-list', namesList)

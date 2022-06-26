@@ -41,9 +41,13 @@ function getItemById(itemId) {
 }
 
 function save(item) {
-  if (item._is) {
-    gItems.push(item)
+  if (item._id) {
+    console.log('update item', item)
+    const idx = gItems.findIndex((i) => i._id === item._Id)
+    gItems.splice(idx, 1, item)
+    console.log(gItems)
   } else {
+    console.log('new item save', item)
     item._id = utilsService.makeId()
     gItems.push(item)
   }

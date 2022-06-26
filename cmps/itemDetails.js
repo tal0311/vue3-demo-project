@@ -10,9 +10,19 @@ export default {
         
         <section v-if="item" className="item-details flex">
           <div className="info-container">
-            <h1>{{item.name}}</h1>
-            <h3>{{item.cellNum}}</h3>
-            <h3>{{item.email}}</h3>
+            <h1 contenteditable="true"
+            @blur="onUpdateItem"
+            >
+              {{item.name || 'Add name'}}</h1>
+            <h3 class="cell-num" contenteditable="true"
+              @blur="onUpdateItem"
+            >
+              {{item.cellNum|| 'Add cell number'}}</h3>
+
+            <h3 class="email" contenteditable="true"
+            @blur="onUpdateItem"
+            >
+              {{item.email || 'Add email address'}}</h3>
             <section className="connect-action flex space-around">
               <button class="connect wa-icon" 
               @click="onChangeConnectMethod('waCmp')">whatsapp</button>
@@ -61,6 +71,21 @@ export default {
     },
     onChangeConnectMethod(method) {
       this.currentCmp = method
+    },
+    onUpdateItem({ target }) {
+      console.dir(target)
+      if (target.nodeName === 'H1') {
+        console.log(target.innerText)
+        this.$emit('update', 'title', target.innerText)
+      }
+      if (target.className === 'cell-num') {
+        console.log(target.innerText)
+        this.$emit('update', 'cellNum', target.innerText)
+      }
+      if (target.className === 'email') {
+        console.log(target.innerText)
+        this.$emit('update', 'email', target.innerText)
+      }
     },
   },
   computed: {},
