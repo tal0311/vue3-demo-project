@@ -244,18 +244,16 @@ dialog .actions-container {
   margin-bottom: 2%;
 }
 
-.connect-mail .actions-container{
+.connect-mail .actions-container {
   justify-content: end;
 }
-.connect-mail .actions-container>button:first-child{
+.connect-mail .actions-container > button:first-child {
   margin-inline-end: 5%;
 }
 
-.connect-mail span{
-  color:red;
-  
+.connect-mail span {
+  color: red;
 }
-
 
 .fall-back {
   /* margin-top: 50%; */
@@ -275,6 +273,22 @@ dialog .actions-container {
   text-decoration: overline;
 }
 
+/* teleport */
+.activities-container {
+  overflow-y: scroll;
+  width: 50vh;
+  height: 100vh;
+  background: var(--clr1);
+  box-shadow: var(--BS);
+  position: fixed;
+  top: 0;
+  left: 0;
+  text-align: center;
+}
+.activities-container article {
+  width: 100%;
+  border-bottom: 1px solid var(--clr2);
+}
 .scale-in-hor-right {
   -webkit-animation: scale-in-hor-right 0.5s
     cubic-bezier(0.25, 0.46, 0.45, 0.94) both;

@@ -10,6 +10,7 @@ export default {
             </router-link>
           </button>
              <h1>Contacts</h1>
+             <button @click="$emit('open-activities')">Activities</button>
              <button @click="$emit('open-modal')">add+</button>
          </header>
         `,

@@ -5,6 +5,7 @@ import namesList from './cmps/names-list.js'
 import appHeader from './cmps/app-header.js'
 import appModal from './cmps/app-modal.js'
 import userMsg from './cmps/user-msg.js'
+import activities from './cmps/activities.js'
 
 const options = {
   template: `
@@ -13,7 +14,9 @@ const options = {
         @reset-msg="setUserMsg"
         >{{userMsg}}</user-msg>
 
-        <app-header @open-modal="ToggleModal"></app-header>
+        <app-header @open-modal="ToggleModal"
+        @open-activities="toggleActivities"
+        ></app-header>
         <!-- <app-portal></app-portal> -->
         <names-List v-if="items"
           :names="items"
@@ -26,6 +29,9 @@ const options = {
         ></app-modal>
         <!-- nested route about page -->
         <router-view></router-view>
+        
+          <activities :activities="activities" v-if="isTeleportOpen"></activities>
+
  `,
 
   created() {
@@ -41,6 +47,7 @@ const options = {
       userMsg: '',
       currItem: null,
       activities: [],
+      isTeleportOpen: false,
     }
   },
   watch: {
@@ -52,12 +59,6 @@ const options = {
         }
       },
     },
-    // items(newvalue, oldvalue) {
-    //   if (newvalue.length < oldvalue.length) {
-    //     const desc = `item removed from list`
-    //     this.onNewActivity(desc)
-    //   }
-    // },
     $route({ path, name, params: { _id } }) {
       if (name === 'details') {
         this.setCurrIte(_id)
@@ -102,6 +103,9 @@ const options = {
       this.activities = [...this.activities, activity]
       console.log(this.activities)
     },
+    toggleActivities() {
+      this.isTeleportOpen = !this.isTeleportOpen
+    },
   },
   updated() {
     appService.logActivities(this.activities)
@@ -114,6 +118,7 @@ const options = {
     namesList,
     appModal,
     userMsg,
+    activities,
   },
 }
 
@@ -123,6 +128,7 @@ app.component('app-header', appHeader)
 app.component('app-modal', appModal)
 app.component('names-list', namesList)
 app.component('user-msg', userMsg)
+app.component('activities', activities)
 
 app.use(router)
 app.mount('#app')
