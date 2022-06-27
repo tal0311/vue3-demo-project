@@ -9,7 +9,7 @@ import activities from './cmps/activities.js'
 const options = {
   template: `
         <!-- user msg cmp -->
-        <user-msg v-if="userMsg"
+        <user-msg ref="tst" v-if="userMsg"
         @reset-msg="setUserMsg"
         >{{userMsg}}</user-msg>
         <!-- app header -->
@@ -36,7 +36,9 @@ const options = {
   created() {
     this.loadItems()
   },
-
+  mounted() {
+    console.log(this.$refs.tst)
+  },
   data() {
     return {
       items: [],

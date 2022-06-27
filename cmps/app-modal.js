@@ -24,6 +24,7 @@ export default {
 
   mounted() {
     this.openDialog()
+    
   },
   created() {
     this.modalState = this.isModalOpen
