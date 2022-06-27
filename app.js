@@ -60,7 +60,7 @@ const options = {
     $route({ path, name, params: { _id } }) {
       if (name === 'details') {
         this.setCurrIte(_id)
-        const desc = `item with id:${_id} was viewed`
+        const desc = `item with id: ${_id} was viewed`
         this.onNewActivity(desc)
       }
       if (path === '/') this.setCurrIte(null)
@@ -68,7 +68,7 @@ const options = {
   },
   methods: {
     loadItems() {
-      this.items = appService.getItems()
+      this.items = appService.query()
       this.setUserMsg('items loaded')
     },
     ToggleModal(item) {
@@ -81,7 +81,7 @@ const options = {
     onAddItem(item) {
       const addedItem = appService.save(item)
       this.setUserMsg('New item added')
-      this.items = [...this.items]
+      this.items.push(addedItem)
       const desc = `item added to list`
       this.onNewActivity(desc)
       // this.loadItems()

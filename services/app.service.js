@@ -5,19 +5,22 @@ const KEY = 'ITEMS'
 const ACT_KEY = 'ACTIVITIES'
 var gItems = []
 createItems()
-function getItems() {
-  const items = utilsService.loadFromStorage(KEY)
-  if (items.length > 0) {
-    gItems = items
-  }
-  return gItems
+
+function query() {
+  return utilsService.loadFromStorage(KEY)
 }
 
 // creating data
 function createItems() {
-  gItems.push(createItem('tal1', '0543113309', 'tal0311@gmial.com'))
-  gItems.push(createItem('tal2', '0543111509', 'tal@gmial.com'))
-  gItems.push(createItem('tal3', '0543112246', 'tal.amit@gmial.com'))
+  let items = utilsService.loadFromStorage(KEY)
+  if (!items || !items.length) {
+    const items = []
+    items.push(createItem('tal1', '0543113309', 'tal0311@gmial.com'))
+    items.push(createItem('tal2', '0543111509', 'tal@gmial.com'))
+    items.push(createItem('tal3', '0543112246', 'tal.amit@gmial.com'))
+    utilsService.saveToStorage(KEY, gItems)
+  }
+  return items
 }
 
 function createItem(name, cellNum, email) {
@@ -30,28 +33,30 @@ function createItem(name, cellNum, email) {
 }
 
 function removeItem(itemId) {
-  let foundItem = getItemById(itemId)
-  gItems = gItems.filter((item) => item._id !== foundItem._id)
-  utilsService.saveToStorage(KEY, gItems)
-  return gItems.findIndex((item) => item._id === itemId)
+  let items = query()
+  const idx = items.findIndex((item) => item._id === itemId)
+  items.splice(idx, 1)
+  utilsService.saveToStorage(KEY, items)
+  return
 }
 
 function getItemById(itemId) {
-  return gItems.find((item) => item._id === itemId)
+  return query().find((item) => item._id === itemId)
 }
 
 function save(item) {
+  const items =query()
   if (item._id) {
     console.log('update item', item)
-    const idx = gItems.findIndex((i) => i._id === item._Id)
-    gItems.splice(idx, 1, item)
-    console.log(gItems)
+    const idx = items.findIndex((i) => i._id === item._Id)
+    items.splice(idx, 1, item)
+    console.log(items)
   } else {
     console.log('new item save', item)
     item._id = utilsService.makeId()
-    gItems.push(item)
+    items.push(item)
   }
-  utilsService.saveToStorage(KEY, gItems)
+  utilsService.saveToStorage(KEY, items)
   return item
 }
 
@@ -75,7 +80,7 @@ function logActivities(activities) {
   utilsService.saveToStorage(ACT_KEY, activities)
 }
 export const appService = {
-  getItems,
+  query,
   getEmptyItem,
   save,
   removeItem,
